@@ -1,0 +1,6 @@
+@Group5F25.API_HostAddress = http://localhost:5016
+
+GET {{Group5F25.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
