@@ -19,6 +19,8 @@ namespace Group5F25.API.Data
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
 
             base.OnModelCreating(modelBuilder);
+
+
         }
     }
 }
