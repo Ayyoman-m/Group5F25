@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Toolkit.Hosting;
+using Group5F25.APP.PageModels;
+using Group5F25.APP.Pages;
 
 namespace Group5F25.APP
 {
@@ -44,6 +46,10 @@ namespace Group5F25.APP
 
             builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
             builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
+
+            // Register Login Page and ViewModel
+            builder.Services.AddTransient<LoginViewModel>();
+            builder.Services.AddTransient<LoginPage>();
 
             return builder.Build();
         }
