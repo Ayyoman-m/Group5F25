@@ -11,7 +11,7 @@
         <VerticalStackLayout Grid.Row="1" Spacing="14" VerticalOptions="Center">
 
             <Label 
-                Text="Driver Analytics" 
+                Text="Driver Analytics APP" 
                 FontSize="24" 
                 HorizontalOptions="Center" />
 
