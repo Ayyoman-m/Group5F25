@@ -58,5 +58,13 @@ namespace Group5F25.APP.Services
             if (!resp.IsSuccessStatusCode) return null;
             return await resp.Content.ReadAsStringAsync(ct);
         }
+
+        public async Task<UserProfile?> GetMeAsync(CancellationToken ct = default)
+        {
+            var resp = await _http.GetAsync(ApiConfig.MePath, ct);
+            if (!resp.IsSuccessStatusCode) return null;
+            return await resp.Content.ReadFromJsonAsync<UserProfile>(JsonOpts, ct);
+        }
+        
     }
 }
