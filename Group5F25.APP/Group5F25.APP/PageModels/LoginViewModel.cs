@@ -2,19 +2,23 @@
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Microsoft.Maui.Controls;
+using Group5F25.APP.Services;
 
 namespace Group5F25.APP.PageModels
 {
     public class LoginViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler? PropertyChanged;
-        void Raise([CallerMemberName] string? n = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
+        void Raise([CallerMemberName] string? n = null) =>
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
 
-        private string _loginEmail = string.Empty;
-        public string LoginEmail
+        private readonly IAuthService _auth;
+
+        private string _loginUsername = string.Empty;
+        public string LoginUsername
         {
-            get => _loginEmail;
-            set { if (_loginEmail != value) { _loginEmail = value; Raise(); } }
+            get => _loginUsername;
+            set { if (_loginUsername != value) { _loginUsername = value; Raise(); } }
         }
 
         private string _loginPassword = string.Empty;
@@ -28,7 +32,16 @@ namespace Group5F25.APP.PageModels
         public bool IsBusy
         {
             get => _isBusy;
-            set { if (_isBusy != value) { _isBusy = value; Raise(); Raise(nameof(LoginButtonText)); } }
+            set
+            {
+                if (_isBusy != value)
+                {
+                    _isBusy = value;
+                    Raise();
+                    Raise(nameof(LoginButtonText));
+                    ((Command)LoginCommand).ChangeCanExecute();
+                }
+            }
         }
 
         private bool _hasError;
@@ -46,27 +59,66 @@ namespace Group5F25.APP.PageModels
         }
 
         public string LoginButtonText => IsBusy ? "Signing in..." : "Login";
-
         public ICommand LoginCommand { get; }
 
-        public LoginViewModel()
+        public LoginViewModel(IAuthService auth)
         {
-            // For Task 1: UI-only behavior (no API). Just validate and show an error if empty.
+            _auth = auth;
+
+#if DEBUG
+            // Valid DummyJSON accounts:
+            // emilys / emilyspass  OR  kminchelle / 0lelplR
+            LoginUsername = "emilys";
+            LoginPassword = "emilyspass";
+#endif
+
             LoginCommand = new Command(async () =>
             {
-                HasError = false; ErrorMessage = string.Empty;
+                HasError = false;
+                ErrorMessage = string.Empty;
 
-                if (string.IsNullOrWhiteSpace(LoginEmail) || string.IsNullOrWhiteSpace(LoginPassword))
+                var user = (LoginUsername ?? string.Empty).Trim();
+                var pass = (LoginPassword ?? string.Empty).Trim();
+                if (string.IsNullOrWhiteSpace(user) || string.IsNullOrWhiteSpace(pass))
                 {
-                    HasError = true; ErrorMessage = "Please enter email and password.";
+                    HasError = true;
+                    ErrorMessage = "Enter username and password.";
                     return;
                 }
 
-                IsBusy = true;
-                await Task.Delay(500); // simulate a quick processing feel
-                IsBusy = false;
+                try
+                {
+                    IsBusy = true;
+                    var result = await _auth.LoginAsync(user, pass);
+                    if (!result.Success || string.IsNullOrWhiteSpace(result.accessToken))
+                    {
+                        HasError = true;
+                        ErrorMessage = result.Error ?? "Invalid credentials.";
+                        return;
+                    }
 
-                // Navigation will be added in Task 2 (after API result). For Task 1, we stop here.
+                    // Optional sanity call to /auth/me using the bearer set in AuthService
+                    var me = await _auth.GetMeRawAsync();
+                    if (me is null)
+                    {
+                        HasError = true;
+                        ErrorMessage = "Token set, but /auth/me failed.";
+                        return;
+                    }
+
+                    // SUCCESS → navigate to HomePage
+                    await AppShell.DisplayToastAsync("Signed in successfully.");
+                    await Shell.Current.GoToAsync("//home");
+                }
+                catch (Exception ex)
+                {
+                    HasError = true;
+                    ErrorMessage = $"Network error: {ex.Message}";
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
             }, () => !IsBusy);
         }
     }
