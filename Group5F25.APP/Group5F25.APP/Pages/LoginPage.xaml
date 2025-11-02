@@ -7,6 +7,7 @@
     x:DataType="vm:LoginViewModel"
     Title="Login">
 
+
     <Grid Padding="28" RowDefinitions="Auto,*">
         <VerticalStackLayout Grid.Row="1" Spacing="14" VerticalOptions="Center">
 
@@ -16,14 +17,14 @@
                 HorizontalOptions="Center" />
 
             <Entry 
-                Placeholder="Email" 
-                Keyboard="Email" 
-                Text="{Binding LoginEmail}" />
+                Placeholder="Username" 
+                Text="{Binding LoginUsername}" />
 
             <Entry 
                 Placeholder="Password" 
                 IsPassword="True" 
                 Text="{Binding LoginPassword}" />
+
 
             <Label 
                 Text="{Binding ErrorMessage}" 
