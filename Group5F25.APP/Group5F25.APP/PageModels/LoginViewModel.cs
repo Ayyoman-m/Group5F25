@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Microsoft.Maui.Controls;
 using Group5F25.APP.Services;
+using System.Diagnostics;
 
 namespace Group5F25.APP.PageModels
 {
@@ -97,14 +98,15 @@ namespace Group5F25.APP.PageModels
                         return;
                     }
 
-                    // Optional sanity call to /auth/me using the bearer set in AuthService
-                    var me = await _auth.GetMeRawAsync();
+                    var me = await _auth.GetMeAsync();
                     if (me is null)
                     {
                         HasError = true;
                         ErrorMessage = "Token set, but /auth/me failed.";
                         return;
                     }
+
+                    Debug.WriteLine($"[AUTH VERIFIED] id={me.id} username={me.username}");
 
                     // SUCCESS → navigate to HomePage
                     await AppShell.DisplayToastAsync("Signed in successfully.");
