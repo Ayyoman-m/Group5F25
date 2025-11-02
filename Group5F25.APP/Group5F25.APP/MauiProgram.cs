@@ -1,8 +1,14 @@
 ﻿using CommunityToolkit.Maui;
-using Microsoft.Extensions.Logging;
-using Syncfusion.Maui.Toolkit.Hosting;
+using Group5F25.APP;
 using Group5F25.APP.PageModels;
 using Group5F25.APP.Pages;
+using Group5F25.APP.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Syncfusion.Maui.Toolkit.Hosting;
+using System;
+using System.Net.Http;
+
 
 namespace Group5F25.APP
 {
@@ -46,10 +52,19 @@ namespace Group5F25.APP
 
             builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
             builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
+            
 
             // Register Login Page and ViewModel
             builder.Services.AddTransient<LoginViewModel>();
             builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddSingleton<AppShell>();
+            builder.Services.AddTransient<HomePage>();
+
+            builder.Services.AddHttpClient<IAuthService, AuthService>(client =>
+            {
+                client.BaseAddress = new Uri(ApiConfig.BaseUrl);
+                client.Timeout = TimeSpan.FromSeconds(15);
+            });
 
             return builder.Build();
         }
