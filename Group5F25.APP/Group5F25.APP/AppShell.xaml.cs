@@ -1,14 +1,32 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using Group5F25.APP.Pages;
 using Font = Microsoft.Maui.Font;
 
 namespace Group5F25.APP
 {
     public partial class AppShell : Shell
     {
-        public AppShell()
+        // Inject both pages so VM binding works
+        public AppShell(LoginPage loginPage, HomePage homePage)
         {
             InitializeComponent();
+
+            Items.Clear();
+
+            Items.Add(new ShellContent
+            {
+                Title = "Login",
+                Route = "login",
+                Content = loginPage
+            });
+
+            Items.Add(new ShellContent
+            {
+                Title = "Home",
+                Route = "home",
+                Content = homePage
+            });
         }
 
         public static async Task DisplaySnackbarAsync(string message)
