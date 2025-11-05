@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36603.0 d17.14
+VisualStudioVersion = 17.14.36603.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Group5F25.API", "Group5F25.API.csproj", "{277E1497-C9BF-4B66-B98C-620739C01284}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Group5F25.Tests", "..\Group5F25.Tests\Group5F25.Tests.csproj", "{834F21FE-634F-4741-8E65-A821F63B8314}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Group5F25.APP", "..\Group5F25.APP\Group5F25.APP\Group5F25.APP.csproj", "{E1047E8A-64F1-43AE-88C3-ED1F3007D32F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{834F21FE-634F-4741-8E65-A821F63B8314}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{834F21FE-634F-4741-8E65-A821F63B8314}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{834F21FE-634F-4741-8E65-A821F63B8314}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1047E8A-64F1-43AE-88C3-ED1F3007D32F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1047E8A-64F1-43AE-88C3-ED1F3007D32F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1047E8A-64F1-43AE-88C3-ED1F3007D32F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1047E8A-64F1-43AE-88C3-ED1F3007D32F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
