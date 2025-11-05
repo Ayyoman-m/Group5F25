@@ -15,11 +15,11 @@ namespace Group5F25.APP.PageModels
 
         private readonly IAuthService _auth;
 
-        private string _loginUsername = string.Empty;
-        public string LoginUsername
+        private string _loginEmail = string.Empty;
+        public string LoginEmail
         {
-            get => _loginUsername;
-            set { if (_loginUsername != value) { _loginUsername = value; Raise(); } }
+            get => _loginEmail;
+            set { if (_loginEmail != value) { _loginEmail = value; Raise(); } }
         }
 
         private string _loginPassword = string.Empty;
@@ -69,7 +69,7 @@ namespace Group5F25.APP.PageModels
 #if DEBUG
             // Valid DummyJSON accounts:
             // emilys / emilyspass  OR  kminchelle / 0lelplR
-            LoginUsername = "emilys";
+            LoginEmail = "emilys";
             LoginPassword = "emilyspass";
 #endif
 
@@ -78,9 +78,9 @@ namespace Group5F25.APP.PageModels
                 HasError = false;
                 ErrorMessage = string.Empty;
 
-                var user = (LoginUsername ?? string.Empty).Trim();
+                var email = (LoginEmail ?? string.Empty).Trim();
                 var pass = (LoginPassword ?? string.Empty).Trim();
-                if (string.IsNullOrWhiteSpace(user) || string.IsNullOrWhiteSpace(pass))
+                if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(pass))
                 {
                     HasError = true;
                     ErrorMessage = "Enter username and password.";
@@ -90,7 +90,7 @@ namespace Group5F25.APP.PageModels
                 try
                 {
                     IsBusy = true;
-                    var result = await _auth.LoginAsync(user, pass);
+                    var result = await _auth.LoginAsync(email, pass);
                     if (!result.Success || string.IsNullOrWhiteSpace(result.accessToken))
                     {
                         HasError = true;
@@ -98,15 +98,15 @@ namespace Group5F25.APP.PageModels
                         return;
                     }
 
-                    var me = await _auth.GetMeAsync();
-                    if (me is null)
-                    {
-                        HasError = true;
-                        ErrorMessage = "Token set, but /auth/me failed.";
-                        return;
-                    }
+                    //var me = await _auth.GetMeAsync();
+                    //if (me is null)
+                    //{
+                    //    HasError = true;
+                    //    ErrorMessage = "Token set, but /auth/me failed.";
+                    //    return;
+                    //}
 
-                    Debug.WriteLine($"[AUTH VERIFIED] id={me.id} username={me.username}");
+                    //Debug.WriteLine($"[AUTH VERIFIED] id={me.id} username={me.email}");
 
                     // SUCCESS → navigate to HomePage
                     await AppShell.DisplayToastAsync("Signed in successfully.");

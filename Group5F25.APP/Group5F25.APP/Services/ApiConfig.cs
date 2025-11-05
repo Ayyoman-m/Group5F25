@@ -2,8 +2,9 @@
 {
     public static class ApiConfig
     {
-        public const string BaseUrl = "https://dummyjson.com/";
+        public const string BaseUrl = "https://localhost:7134/";
         public const string LoginPath = "auth/login";
-        public const string MePath = "auth/me";
+        public const string RegisterPath = "auth/register"; // optional, for later
+        public const string MePath = "auth/me"; // only if backend adds it
     }
 }

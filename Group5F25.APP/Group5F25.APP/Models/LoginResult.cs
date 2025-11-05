@@ -1,20 +1,22 @@
 ﻿namespace Group5F25.APP.Models
 {
-    // Shape of DummyJSON login response (simplified)
+    // Shape of Rasik's AuthResponse
     public sealed class LoginResult
     {
         public bool Success { get; set; }
-        public string? Error { get; set; }
+        public string Message { get; set; } = string.Empty;
+        public int? UserId { get; set; }
+        public string? Token { get; set; }
+        public int Code { get; set; }   // matches AuthResultCode enum (as int)
 
-        // DummyJSON returns "accessToken" and "refreshToken"
-        public string? accessToken { get; set; }
-        public string? refreshToken { get; set; }
-
-        // Convenience property used by your VM
-        public string? Token
+        // Optional: keep compatibility with old code that used accessToken
+        public string? accessToken
         {
-            get => accessToken;
-            set => accessToken = value;
+            get => Token;
+            set => Token = value;
         }
+
+        // Optional convenience for your ViewModel
+        public string? Error => Success ? null : Message;
     }
 }

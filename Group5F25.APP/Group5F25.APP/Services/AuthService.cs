@@ -23,9 +23,9 @@ namespace Group5F25.APP.Services
                 _http.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
         }
 
-        public async Task<LoginResult> LoginAsync(string username, string password, CancellationToken ct = default)
+        public async Task<LoginResult> LoginAsync(string email, string password, CancellationToken ct = default)
         {
-            var req = new LoginRequest { username = username, password = password };
+            var req = new LoginRequest { email = email, password = password };
 
             HttpResponseMessage resp;
             try
@@ -34,30 +34,30 @@ namespace Group5F25.APP.Services
             }
             catch (Exception ex)
             {
-                return new LoginResult { Success = false, Error = $"Network error: {ex.Message}" };
+                return new LoginResult { Success = false, Message = $"Network error: {ex.Message}" };
             }
 
             var body = await resp.Content.ReadAsStringAsync(ct);
 
             if (!resp.IsSuccessStatusCode)
-                return new LoginResult { Success = false, Error = $"Login failed ({(int)resp.StatusCode}). Body: {body}" };
+                return new LoginResult { Success = false, Message = $"Login failed ({(int)resp.StatusCode}). Body: {body}" };
 
             // Parse expected DummyJSON fields
             var result = JsonSerializer.Deserialize<LoginResult>(body, JsonOpts) ?? new LoginResult();
             if (string.IsNullOrWhiteSpace(result.accessToken))
-                return new LoginResult { Success = false, Error = "Unexpected response format. accessToken missing." };
+                return new LoginResult { Success = false, Message = "Unexpected response format. accessToken missing." };
 
             result.Success = true;
             SetAccessToken(result.accessToken);
             return result;
         }
 
-        public async Task<string?> GetMeRawAsync(CancellationToken ct = default)
-        {
-            var resp = await _http.GetAsync(ApiConfig.MePath, ct);
-            if (!resp.IsSuccessStatusCode) return null;
-            return await resp.Content.ReadAsStringAsync(ct);
-        }
+        //public async Task<string?> GetMeRawAsync(CancellationToken ct = default)
+        //{
+        //    var resp = await _http.GetAsync(ApiConfig.MePath, ct);
+        //    if (!resp.IsSuccessStatusCode) return null;
+        //    return await resp.Content.ReadAsStringAsync(ct);
+        //}
 
         public async Task<UserProfile?> GetMeAsync(CancellationToken ct = default)
         {

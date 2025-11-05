@@ -7,7 +7,7 @@ namespace Group5F25.APP.Services
     {
         Task<LoginResult> LoginAsync(string username, string password, CancellationToken ct = default);
         void SetAccessToken(string? token);
-        Task<string?> GetMeRawAsync(CancellationToken ct = default);
+        //Task<string?> GetMeRawAsync(CancellationToken ct = default);
         Task<UserProfile?> GetMeAsync(CancellationToken ct = default);   // add
     }
 }

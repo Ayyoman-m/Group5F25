@@ -17,8 +17,8 @@
                 HorizontalOptions="Center" />
 
             <Entry 
-                Placeholder="Username" 
-                Text="{Binding LoginUsername}" />
+                Placeholder="Email" 
+                Text="{Binding LoginEmail}" />
 
             <Entry 
                 Placeholder="Password" 
