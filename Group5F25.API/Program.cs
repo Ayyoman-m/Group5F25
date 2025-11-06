@@ -1,8 +1,8 @@
 ﻿using Group5F25.API.Data;
 using Group5F25.API.Services;
 using Group5F25.API.Options; //  For JwtOptions
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -16,19 +16,24 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 // -----------------------------------------------------
 //  2. DATABASE: Use SQL normally, InMemory for testing
 // -----------------------------------------------------
-if (builder.Environment.IsEnvironment("Testing"))
-{
-    builder.Services.AddDbContext<DriverAnalyticsContext>(opts =>
-        opts.UseInMemoryDatabase("DriverAnalytics_TestDB"));
-}
-else
-{
-    builder.Services.AddDbContext<DriverAnalyticsContext>(opts =>
-        opts.UseSqlServer(
-            builder.Configuration.GetConnectionString("DriverAnalyticsDb"),
-            sql => sql.EnableRetryOnFailure()
-        ));
-}
+
+//if (builder.Environment.IsEnvironment("Testing"))
+//{
+//    builder.Services.AddDbContext<DriverAnalyticsContext>(opts =>
+//        opts.UseInMemoryDatabase("DriverAnalytics_TestDB"));
+//}
+//else
+//{
+//    builder.Services.AddDbContext<DriverAnalyticsContext>(opts =>
+//        opts.UseSqlServer(
+//            builder.Configuration.GetConnectionString("DriverAnalyticsDb"),
+//            sql => sql.EnableRetryOnFailure()
+//        ));
+//}
+
+//  2. DATABASE: Use InMemory for local dev (no SQL Server needed)
+builder.Services.AddDbContext<DriverAnalyticsContext>(opts =>
+    opts.UseInMemoryDatabase("DriverAnalytics_Local"));
 
 // -----------------------------------------------------
 //  3. DEPENDENCY INJECTION (DI)
