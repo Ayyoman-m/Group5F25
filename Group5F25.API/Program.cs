@@ -35,6 +35,15 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 builder.Services.AddDbContext<DriverAnalyticsContext>(opts =>
     opts.UseInMemoryDatabase("DriverAnalytics_Local"));
 
+//  2b. DATABASE: MySQL for Users (Auth)
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<AppDbContext>(opts =>
+    opts.UseMySql(
+        connectionString,
+        ServerVersion.AutoDetect(connectionString)
+    ));
+
 // -----------------------------------------------------
 //  3. DEPENDENCY INJECTION (DI)
 // -----------------------------------------------------

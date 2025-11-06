@@ -5,18 +5,21 @@ using Group5F25.API.Models;
 
 namespace Group5F25.API.Services
 {
-    // Handles user login and registration logic
+    // Handles authentication using MySQL for users and InMemory DB for analytics
     public class AuthService : IAuthService
     {
-        private readonly DriverAnalyticsContext _context;
+        private readonly AppDbContext _context;
+        private readonly DriverAnalyticsContext _analyticsDb;
         private readonly IJwtTokenService _jwt;
 
         // Constructor: connects to database and JWT service
-        public AuthService(DriverAnalyticsContext context, IJwtTokenService jwt)
+        public AuthService(AppDbContext context, DriverAnalyticsContext analyticsDb, IJwtTokenService jwt)
         {
             _context = context;
+            _analyticsDb = analyticsDb;
             _jwt = jwt;
         }
+
 
         // Registers a new user
         public async Task<AuthResponse> RegisterAsync(RegisterRequest request)
@@ -42,6 +45,11 @@ namespace Group5F25.API.Services
             // Add user to database
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
+
+            // Optional: record registration event in analytics database
+            // _analyticsDb.UserEvents.Add(new UserEvent { UserId = user.UserId, EventType = "Register", Timestamp = DateTime.UtcNow });
+            // await _analyticsDb.SaveChangesAsync();
+
 
             // Generate a JWT token for the new user
             var token = _jwt.GenerateToken(user);
@@ -76,6 +84,11 @@ namespace Group5F25.API.Services
 
             // Generate JWT token for successful login
             var token = _jwt.GenerateToken(user);
+
+            // Optional: record login event
+            // _analyticsDb.UserEvents.Add(new UserEvent { UserId = user.UserId, EventType = "Login", Timestamp = DateTime.UtcNow });
+            // await _analyticsDb.SaveChangesAsync();
+
 
             // Return success response
             return new AuthResponse
