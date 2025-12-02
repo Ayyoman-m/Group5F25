@@ -48,7 +48,15 @@ namespace Group5F25.APP.PageModels
 
             _tripService = tripService;
 
+            NavigateToTripHistoryCommand = new AsyncRelayCommand(OnNavigateToTripHistoryAsync);
+
         }
+
+        private async Task OnNavigateToTripHistoryAsync()
+        {
+            await Shell.Current.GoToAsync("tripHistory");
+        }
+
 
         [RelayCommand]
         private async Task ToggleTrip()
