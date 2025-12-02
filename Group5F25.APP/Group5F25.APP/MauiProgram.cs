@@ -1,6 +1,14 @@
 ﻿using CommunityToolkit.Maui;
+using Group5F25.APP;
+using Group5F25.APP.PageModels;
+using Group5F25.APP.Pages;
+using Group5F25.APP.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Toolkit.Hosting;
+using System;
+using System.Net.Http;
+
 
 namespace Group5F25.APP
 {
@@ -44,6 +52,38 @@ namespace Group5F25.APP
 
             builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
             builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
+            
+
+            // Register Login Page and ViewModel
+            builder.Services.AddTransient<LoginViewModel>();
+            builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddSingleton<AppShell>();
+
+            // Register the ViewModel so HomePage can inject it
+            builder.Services.AddTransient<HomePageViewModel>();
+            builder.Services.AddTransient<HomePage>();
+
+            builder.Services.AddTransient<RegisterViewModel>();
+
+            builder.Services.AddTransient<RegisterPage>();
+
+       
+            builder.Services.AddTransient<TripHistoryViewModel>();
+            builder.Services.AddTransient<TripHistoryPage>();
+
+
+            builder.Services.AddHttpClient<IAuthService, AuthService>(client =>
+            {
+                client.BaseAddress = new Uri(ApiConfig.BaseUrl);
+                client.Timeout = TimeSpan.FromSeconds(15);
+            });
+
+
+            builder.Services.AddHttpClient<ITripService, TripService>(client =>
+            {
+                client.BaseAddress = new Uri(ApiConfig.BaseUrl);
+                client.Timeout = TimeSpan.FromSeconds(15);
+            });
 
             return builder.Build();
         }

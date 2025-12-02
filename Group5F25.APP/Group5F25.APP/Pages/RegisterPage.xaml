@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Group5F25.APP.Pages.RegisterPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:vm="clr-namespace:Group5F25.APP.PageModels"
+    x:DataType="vm:RegisterViewModel"
+    Title="Register">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="12" VerticalOptions="Center">
+
+            <Label Text="Create Account"
+                   FontSize="24"
+                   HorizontalOptions="Center" />
+
+            <Entry Placeholder="First Name"
+                   Text="{Binding FirstName}" />
+
+            <Entry Placeholder="Last Name"
+                   Text="{Binding LastName}" />
+
+            <Entry Placeholder="Email"
+                   Keyboard="Email"
+                   Text="{Binding Email}" />
+
+            <Entry Placeholder="Password"
+                   IsPassword="True"
+                   Text="{Binding Password}" />
+
+            <Entry Placeholder="Confirm Password"
+                   IsPassword="True"
+                   Text="{Binding ConfirmPassword}" />
+
+            <!-- Error in red -->
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="Red"
+                   IsVisible="{Binding HasError}" />
+
+            <!-- Info in green -->
+            <Label Text="{Binding InfoMessage}"
+                   TextColor="Green"
+                   IsVisible="{Binding HasInfo}" />
+
+            <Button Text="{Binding RegisterButtonText}"
+                    Command="{Binding RegisterCommand}" />
+
+            <Button Text="Back to Login"
+                    Command="{Binding BackToLoginCommand}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
