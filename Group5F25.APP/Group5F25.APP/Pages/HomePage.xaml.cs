@@ -1,5 +1,4 @@
 using Group5F25.APP.PageModels;
-using Microsoft.Maui.Storage;
 
 namespace Group5F25.APP.Pages
 {
@@ -11,17 +10,21 @@ namespace Group5F25.APP.Pages
             BindingContext = vm;
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
 
             if (BindingContext is HomePageViewModel vm)
             {
-                // Prefer full display name, then username, then "User"
-                var name = Preferences.Get("displayName",
-                           Preferences.Get("username", "User"));
+                vm.RefreshUser();
+            }
 
-                vm.UserName = name;
+            // Simple bounce animation for the score card
+            if (ScoreCard != null)
+            {
+                ScoreCard.Scale = 0.9;
+                await ScoreCard.ScaleTo(1.03, 150, Easing.CubicOut);
+                await ScoreCard.ScaleTo(1.0, 120, Easing.CubicIn);
             }
         }
     }

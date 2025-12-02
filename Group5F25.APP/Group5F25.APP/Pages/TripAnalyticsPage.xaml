@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Group5F25.APP.PageModels"
+             x:Class="Group5F25.APP.Pages.TripAnalyticsPage"
+             x:DataType="vm:TripAnalyticsViewModel"
+             Title="Trip Analytics"
+             BackgroundColor="#F2F2F2">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Label Text="Trip Analytics"
+                   FontSize="22"
+                   FontAttributes="Bold"
+                   TextColor="#512BD4" />
+
+            <Border StrokeShape="RoundRectangle 16"
+                    StrokeThickness="0"
+                    BackgroundColor="White"
+                    Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Total Trips"
+                           FontAttributes="Bold"
+                           FontSize="14"
+                           TextColor="#555" />
+                    <Label Text="{Binding TotalTrips}"
+                           FontSize="28"
+                           FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border StrokeShape="RoundRectangle 16"
+                    StrokeThickness="0"
+                    BackgroundColor="White"
+                    Padding="16">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Average Duration (min)"
+                           FontAttributes="Bold"
+                           FontSize="14"
+                           TextColor="#555" />
+                    <Label Text="{Binding AverageDurationMinutes, StringFormat='{}{0:F1}'}"
+                           FontSize="28"
+                           FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Grid ColumnDefinitions="*,*"
+                  ColumnSpacing="10">
+
+                <Border Grid.Column="0"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="0"
+                        BackgroundColor="White"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Best Score"
+                               FontAttributes="Bold"
+                               FontSize="14"
+                               TextColor="#555" />
+                        <Label Text="{Binding BestScore}"
+                               FontSize="28"
+                               FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <Border Grid.Column="1"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="0"
+                        BackgroundColor="White"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Worst Score"
+                               FontAttributes="Bold"
+                               FontSize="14"
+                               TextColor="#555" />
+                        <Label Text="{Binding WorstScore}"
+                               FontSize="28"
+                               FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

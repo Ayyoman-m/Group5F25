@@ -50,6 +50,17 @@ namespace Group5F25.APP
             builder.Services.AddSingleton<ProjectListPageModel>();
             builder.Services.AddSingleton<ManageMetaPageModel>();
 
+            builder.Services.AddSingleton<ProfilePageViewModel>();
+            builder.Services.AddSingleton<ProfilePage>();
+
+
+            builder.Services.AddSingleton<TripAnalyticsViewModel>();
+            builder.Services.AddSingleton<TripAnalyticsPage>();
+
+            builder.Services.AddSingleton<LeaderboardViewModel>();
+            builder.Services.AddSingleton<LeaderboardPage>();
+
+
             builder.Services.AddTransientWithShellRoute<ProjectDetailPage, ProjectDetailPageModel>("project");
             builder.Services.AddTransientWithShellRoute<TaskDetailPage, TaskDetailPageModel>("task");
             

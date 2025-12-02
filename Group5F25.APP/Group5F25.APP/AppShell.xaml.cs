@@ -36,6 +36,14 @@ namespace Group5F25.APP
 
             Routing.RegisterRoute("tripHistory", typeof(TripHistoryPage));
 
+            Routing.RegisterRoute("profile", typeof(ProfilePage));
+
+            Routing.RegisterRoute("analytics", typeof(TripAnalyticsPage));
+
+            Routing.RegisterRoute("leaderboard", typeof(LeaderboardPage));
+
+
+
         }
 
         public static async Task DisplaySnackbarAsync(string message)

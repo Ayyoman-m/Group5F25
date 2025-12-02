@@ -29,5 +29,17 @@ namespace Group5F25.APP.Services
             return trips ?? new List<TripSummary>();
         }
 
+        public async Task<IEnumerable<TripSummary>> GetTripsForUserAsync(int userId, CancellationToken ct = default)
+        {
+            var trips = await GetTripsAsync(userId, ct);
+            return trips;
+        }
+
+        public async Task<IEnumerable<LeaderboardEntry>> GetLeaderboardAsync()
+        {
+            // TODO: call real API when ready
+            return new List<LeaderboardEntry>();
+        }
+
     }
 }

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Group5F25.APP.PageModels"
+             x:Class="Group5F25.APP.Pages.LeaderboardPage"
+             x:DataType="vm:LeaderboardViewModel"
+             Title="Leaderboard"
+             BackgroundColor="#F2F2F2">
+
+    <VerticalStackLayout Padding="20" Spacing="10">
+
+        <Label Text="Top Drivers"
+               FontSize="22"
+               FontAttributes="Bold"
+               TextColor="#512BD4" />
+
+        <CollectionView ItemsSource="{Binding Entries}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border StrokeShape="RoundRectangle 12"
+                            BackgroundColor="White"
+                            StrokeThickness="0"
+                            Padding="10"
+                            Margin="0,4">
+                        <Grid ColumnDefinitions="40,*,Auto" ColumnSpacing="10">
+                            <Label Grid.Column="0"
+                                   Text="{Binding Rank}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   VerticalOptions="Center"
+                                   HorizontalOptions="Center" />
+
+                            <VerticalStackLayout Grid.Column="1">
+                                <Label Text="{Binding DriverName}"
+                                       FontSize="16"
+                                       FontAttributes="Bold" />
+                                <Label Text="{Binding TripCount, StringFormat='Trips: {0}'}"
+                                       FontSize="12"
+                                       TextColor="#666" />
+                            </VerticalStackLayout>
+
+                            <Label Grid.Column="2"
+                                   Text="{Binding AverageScore, StringFormat='Score {0:F1}'}"
+                                   FontSize="14"
+                                   VerticalOptions="Center"
+                                   TextColor="#512BD4" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+    </VerticalStackLayout>
+</ContentPage>

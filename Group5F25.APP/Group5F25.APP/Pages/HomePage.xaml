@@ -10,17 +10,37 @@
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20">
 
-            <Grid ColumnDefinitions="*, Auto">
+            <Grid ColumnDefinitions="*, 50">
                 <VerticalStackLayout Grid.Column="0">
                     <Label Text="Welcome back," FontSize="14" TextColor="#6E6E6E"/>
                     <Label Text="{Binding UserName}" FontSize="24" FontAttributes="Bold" TextColor="#512BD4"/>
                 </VerticalStackLayout>
-                <Border Grid.Column="1" StrokeShape="RoundRectangle 20" HeightRequest="40" WidthRequest="40" BackgroundColor="#E1E1E1" StrokeThickness="0">
-                    <Label Text="BD" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="#512BD4"/>
+
+                <Border Grid.Column="1"
+        Padding="5"
+        StrokeShape="Ellipse"
+        HeightRequest="40"
+        WidthRequest="40"
+        BackgroundColor="#E1E1E1"
+        StrokeThickness="0">
+
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenProfileCommand}" />
+                    </Border.GestureRecognizers>
+
+                    <Label Text="{Binding UserInitials}"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               FontAttributes="Bold"
+               TextColor="#E1E1E1"/>
+                    
                 </Border>
+
+
             </Grid>
 
-            <Border StrokeShape="RoundRectangle 20" StrokeThickness="0" BackgroundColor="#512BD4" Padding="25">
+
+            <Border  x:Name="ScoreCard" StrokeShape="RoundRectangle 20" StrokeThickness="0" BackgroundColor="#512BD4" Padding="25">
                 <Border.Shadow>
                     <Shadow Brush="Black" Offset="0,4" Radius="10" Opacity="0.3"/>
                 </Border.Shadow>
@@ -75,6 +95,30 @@
         BorderWidth="1"
         CornerRadius="10"
         Command="{Binding NavigateToTripHistoryCommand}" />
+
+            <Button Text="Logout"
+        BackgroundColor="#FF4444"
+        TextColor="White"
+        CornerRadius="10"
+        Command="{Binding LogoutCommand}" />
+
+
+            <Button Text="Analytics"
+        BackgroundColor="White"
+        TextColor="#512BD4"
+        BorderColor="#512BD4"
+        BorderWidth="1"
+        CornerRadius="10"
+        Command="{Binding NavigateToAnalyticsCommand}" />
+
+            <Button Text="Leaderboard"
+        BackgroundColor="White"
+        TextColor="#512BD4"
+        BorderColor="#512BD4"
+        BorderWidth="1"
+        CornerRadius="10"
+        Command="{Binding NavigateToLeaderboardCommand}" />
+
 
 
         </VerticalStackLayout>
