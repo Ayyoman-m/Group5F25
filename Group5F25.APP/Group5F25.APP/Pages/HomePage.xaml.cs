@@ -1,18 +1,28 @@
 using Group5F25.APP.PageModels;
-
-using Group5F25.APP.PageModels;
+using Microsoft.Maui.Storage;
 
 namespace Group5F25.APP.Pages
 {
     public partial class HomePage : ContentPage
     {
-        // 1. Inject the ViewModel into the constructor
         public HomePage(HomePageViewModel vm)
         {
             InitializeComponent();
-
-            // 2. Connect the Page to the ViewModel
             BindingContext = vm;
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+
+            if (BindingContext is HomePageViewModel vm)
+            {
+                // Prefer full display name, then username, then "User"
+                var name = Preferences.Get("displayName",
+                           Preferences.Get("username", "User"));
+
+                vm.UserName = name;
+            }
         }
     }
 }

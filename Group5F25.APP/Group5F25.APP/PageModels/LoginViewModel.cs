@@ -2,8 +2,8 @@
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using Microsoft.Maui.Controls;
+using Microsoft.Maui.Storage;           // <-- IMPORTANT
 using Group5F25.APP.Services;
-using System.Diagnostics;
 
 namespace Group5F25.APP.PageModels
 {
@@ -67,10 +67,9 @@ namespace Group5F25.APP.PageModels
             _auth = auth;
 
 #if DEBUG
-            // Valid DummyJSON accounts:
-            // emilys / emilyspass  OR  kminchelle / 0lelplR
-            LoginEmail = "emilys";
-            LoginPassword = "emilyspass";
+            // Default demo credentials
+            LoginEmail = "test@example.com";
+            LoginPassword = "password123";
 #endif
 
             LoginCommand = new Command(async () =>
@@ -80,35 +79,57 @@ namespace Group5F25.APP.PageModels
 
                 var email = (LoginEmail ?? string.Empty).Trim();
                 var pass = (LoginPassword ?? string.Empty).Trim();
+
                 if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(pass))
                 {
                     HasError = true;
-                    ErrorMessage = "Enter username and password.";
+                    ErrorMessage = "Enter email and password.";
                     return;
                 }
 
                 try
                 {
                     IsBusy = true;
+
+                    // 1) LOGIN → get token & set Authorization header inside AuthService
                     var result = await _auth.LoginAsync(email, pass);
                     if (!result.Success || string.IsNullOrWhiteSpace(result.accessToken))
                     {
                         HasError = true;
-                        ErrorMessage = result.Error ?? "Invalid credentials.";
+                        // Use Message because LoginResult in AuthService sets Message, not Error
+                        ErrorMessage = string.IsNullOrWhiteSpace(result.Message)
+                            ? "Invalid credentials."
+                            : result.Message;
                         return;
                     }
 
-                    //var me = await _auth.GetMeAsync();
-                    //if (me is null)
-                    //{
-                    //    HasError = true;
-                    //    ErrorMessage = "Token set, but /auth/me failed.";
-                    //    return;
-                    //}
+                    // 2) /auth/me → get full profile with firstName / lastName
+                    var me = await _auth.GetMeAsync();
+                    if (me == null)
+                    {
+                        // if /auth/me fails, at least store what user typed
+                        Preferences.Set("displayName", email);
+                        Preferences.Set("username", email);
+                    }
+                    else
+                    {
+                        // Build full name
+                        var fullName = $"{me.firstName} {me.lastName}".Trim();
 
-                    //Debug.WriteLine($"[AUTH VERIFIED] id={me.id} username={me.email}");
+                        // If first/last are empty (e.g., old users without names), fall back
+                        if (string.IsNullOrWhiteSpace(fullName))
+                        {
+                            fullName = string.IsNullOrWhiteSpace(me.username)
+                                ? email
+                                : me.username;
+                        }
 
-                    // SUCCESS → navigate to HomePage
+                        Preferences.Set("displayName", fullName);
+                        Preferences.Set("username", string.IsNullOrWhiteSpace(me.username) ? email : me.username);
+                        Preferences.Set("userId", me.id.ToString());
+                        Preferences.Set("userRole", me.role ?? "");
+                    }
+
                     await AppShell.DisplayToastAsync("Signed in successfully.");
                     await Shell.Current.GoToAsync("//home");
                 }

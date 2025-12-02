@@ -19,7 +19,7 @@ namespace Group5F25.APP.PageModels
         private DateTime _startTime;
 
         [ObservableProperty]
-        private string userName = "Birendra";
+        private string userName;
 
         [ObservableProperty]
         private int overallScore = 85;
@@ -45,12 +45,15 @@ namespace Group5F25.APP.PageModels
         public HomePageViewModel(IDispatcher dispatcher, ITripService tripService)
         {
             _dispatcher = dispatcher;
-
             _tripService = tripService;
 
-            NavigateToTripHistoryCommand = new AsyncRelayCommand(OnNavigateToTripHistoryAsync);
+            // Load username from storage
+            UserName = Preferences.Get("displayName",
+             Preferences.Get("username", "User"));
 
+            NavigateToTripHistoryCommand = new AsyncRelayCommand(OnNavigateToTripHistoryAsync);
         }
+
 
         private async Task OnNavigateToTripHistoryAsync()
         {
