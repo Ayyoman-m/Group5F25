@@ -1,10 +1,14 @@
-﻿
+﻿using System.Text.Json.Serialization;
+
 namespace Group5F25.APP.Models
 {
-    // DummyJSON expects username + password
     public sealed class LoginRequest
     {
-        public string email { get; set; } = "";
-        public string password { get; set; } = "";
+        // FIX: Force lowercase JSON keys to match API expectations perfectly
+        [JsonPropertyName("email")]
+        public string Email { get; set; } = "";
+
+        [JsonPropertyName("password")]
+        public string Password { get; set; } = "";
     }
 }

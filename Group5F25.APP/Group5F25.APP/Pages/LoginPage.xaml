@@ -1,44 +1,62 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    x:Class="Group5F25.APP.Pages.LoginPage"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:vm="clr-namespace:Group5F25.APP.PageModels"
-    x:DataType="vm:LoginViewModel"
-    Title="Login">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Group5F25.APP.PageModels"
+             x:Class="Group5F25.APP.Pages.LoginPage"
+             Title="Driver Analytics"
+             BackgroundColor="#F5F5F5">
 
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="30" VerticalOptions="Center">
 
-    <Grid Padding="28" RowDefinitions="Auto,*">
-        <VerticalStackLayout Grid.Row="1" Spacing="14" VerticalOptions="Center">
+            <Label Text="Welcome Back" 
+                   FontSize="32" 
+                   FontAttributes="Bold" 
+                   HorizontalOptions="Center" 
+                   TextColor="#333"/>
 
-            <Label 
-                Text="Driver Analytics APP" 
-                FontSize="24" 
-                HorizontalOptions="Center" />
+            <Label Text="Sign in to continue" 
+                   FontSize="16" 
+                   HorizontalOptions="Center" 
+                   TextColor="Gray"
+                   Margin="0,0,0,20"/>
 
-            <Entry 
-                Placeholder="Email" 
-                Text="{Binding LoginEmail}" />
+            <Entry Placeholder="Email Address" 
+                   Text="{Binding Email}" 
+                   Keyboard="Email"
+                   BackgroundColor="White"
+                   HeightRequest="50"/>
 
-            <Entry 
-                Placeholder="Password" 
-                IsPassword="True" 
-                Text="{Binding LoginPassword}" />
+            <Entry Placeholder="Password" 
+                   Text="{Binding Password}" 
+                   IsPassword="True"
+                   BackgroundColor="White"
+                   HeightRequest="50"/>
 
+            <ActivityIndicator IsRunning="{Binding IsLoading}" 
+                               IsVisible="{Binding IsLoading}"
+                               Color="#007bff"
+                               HeightRequest="50"/>
 
-            <Label 
-                Text="{Binding ErrorMessage}" 
-                TextColor="Red" 
-                IsVisible="{Binding HasError}" />
+            <Button Text="Login" 
+                    Command="{Binding LoginCommand}" 
+                    IsVisible="{Binding IsNotLoading}"
+                    BackgroundColor="#007bff" 
+                    TextColor="White"
+                    CornerRadius="10"
+                    HeightRequest="50"
+                    FontAttributes="Bold"/>
 
-            <Button 
-                Text="{Binding LoginButtonText}" 
-                Command="{Binding LoginCommand}" />
-            <Button 
-                Text="Create Account"
-                Clicked="OnRegisterClicked" />
-
+            <Label Text="Don't have an account? Register" 
+                   TextColor="#007bff"
+                   HorizontalOptions="Center"
+                   TextDecorations="Underline"
+                   Margin="0,20,0,0">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToRegisterCommand}" />
+                </Label.GestureRecognizers>
+            </Label>
 
         </VerticalStackLayout>
-    </Grid>
+    </ScrollView>
 </ContentPage>

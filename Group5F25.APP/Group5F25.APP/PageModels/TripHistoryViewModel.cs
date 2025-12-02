@@ -1,86 +1,63 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Group5F25.APP.Models;
 using Group5F25.APP.Services;
+using System.Collections.ObjectModel;
 
 namespace Group5F25.APP.PageModels
 {
-    public class TripHistoryViewModel : INotifyPropertyChanged
+    public partial class TripHistoryViewModel : ObservableObject
     {
         private readonly ITripService _tripService;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        void Raise([CallerMemberName] string? name = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        public ObservableCollection<TripSummary> Trips { get; } = new();
 
-        public ObservableCollection<TripSummary> Trips { get; } =
-            new ObservableCollection<TripSummary>();
+        [ObservableProperty]
+        private bool isLoading;
 
-        private bool _isBusy;
-        public bool IsBusy
-        {
-            get => _isBusy;
-            set
-            {
-                if (_isBusy != value)
-                {
-                    _isBusy = value;
-                    Raise();
-                    ((Command)RefreshCommand).ChangeCanExecute();
-                }
-            }
-        }
-
-        private string _errorMessage = string.Empty;
-        public string ErrorMessage
-        {
-            get => _errorMessage;
-            set
-            {
-                if (_errorMessage != value)
-                {
-                    _errorMessage = value;
-                    Raise();
-                }
-            }
-        }
-
-        public ICommand RefreshCommand { get; }
+        [ObservableProperty]
+        private bool isEmpty;
 
         public TripHistoryViewModel(ITripService tripService)
         {
             _tripService = tripService;
-            RefreshCommand = new Command(async () => await LoadTripsAsync(), () => !IsBusy);
         }
 
+        // FIX: Method is now public and named LoadTripsAsync
+        [RelayCommand]
         public async Task LoadTripsAsync()
         {
-            if (IsBusy)
-                return;
+            if (IsLoading) return;
 
+            IsLoading = true;
             try
             {
-                IsBusy = true;
-                ErrorMessage = string.Empty;
-                Trips.Clear();
+                int userId = Preferences.Get("UserId", 0);
 
-                var trips = await _tripService.GetTripsAsync(1);
-
-
-                foreach (var t in trips)
+                if (userId == 0)
                 {
-                    Trips.Add(t);
+                    Trips.Clear();
+                    IsEmpty = true;
+                    return;
                 }
+
+                var tripList = await _tripService.GetTripsAsync(userId);
+
+                Trips.Clear();
+                foreach (var trip in tripList)
+                {
+                    Trips.Add(trip);
+                }
+
+                IsEmpty = Trips.Count == 0;
             }
             catch (Exception ex)
             {
-                ErrorMessage = $"Unable to load trips: {ex.Message}";
+                Console.WriteLine($"Error loading trips: {ex.Message}");
             }
             finally
             {
-                IsBusy = false;
+                IsLoading = false;
             }
         }
     }

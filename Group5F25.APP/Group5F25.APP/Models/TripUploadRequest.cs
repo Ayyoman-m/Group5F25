@@ -11,5 +11,6 @@
 
         public int? SafetyScore { get; set; }
         public string? Notes { get; set; }
+        public List<TripDataPoint> DataPoints { get; set; } = new();
     }
 }

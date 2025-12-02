@@ -1,127 +1,76 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
-using Microsoft.Maui.Controls;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using Group5F25.APP.Models;
 using Group5F25.APP.Services;
-using System.Diagnostics;
 
 namespace Group5F25.APP.PageModels
 {
-    public class LoginViewModel : INotifyPropertyChanged
+    public partial class LoginViewModel : ObservableObject
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-        void Raise([CallerMemberName] string? n = null) =>
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(n));
+        private readonly IAuthService _authService;
 
-        private readonly IAuthService _auth;
+        [ObservableProperty]
+        private string email = string.Empty;
 
-        private string _loginEmail = string.Empty;
-        public string LoginEmail
+        [ObservableProperty]
+        private string password = string.Empty;
+
+        // FIX: Added IsLoading to control button visibility/activity indicator
+        [ObservableProperty]
+        [NotifyPropertyChangedFor(nameof(IsNotLoading))]
+        private bool isLoading;
+
+        public bool IsNotLoading => !IsLoading;
+
+        public LoginViewModel(IAuthService authService)
         {
-            get => _loginEmail;
-            set { if (_loginEmail != value) { _loginEmail = value; Raise(); } }
+            _authService = authService;
         }
 
-        private string _loginPassword = string.Empty;
-        public string LoginPassword
+        [RelayCommand]
+        private async Task Login()
         {
-            get => _loginPassword;
-            set { if (_loginPassword != value) { _loginPassword = value; Raise(); } }
-        }
+            if (IsLoading) return; // Prevent double clicks
 
-        private bool _isBusy;
-        public bool IsBusy
-        {
-            get => _isBusy;
-            set
+            if (string.IsNullOrWhiteSpace(Email) || string.IsNullOrWhiteSpace(Password))
             {
-                if (_isBusy != value)
+                await Shell.Current.DisplayAlert("Error", "Please enter email and password", "OK");
+                return;
+            }
+
+            IsLoading = true; // Hide Button, Show Spinner
+
+            try
+            {
+                var result = await _authService.LoginAsync(Email, Password);
+
+                if (result != null && result.Success)
                 {
-                    _isBusy = value;
-                    Raise();
-                    Raise(nameof(LoginButtonText));
-                    ((Command)LoginCommand).ChangeCanExecute();
+                    Preferences.Set("UserId", result.UserId ?? 0);
+                    Preferences.Set("UserName", Email);
+                    Preferences.Set("AuthToken", result.Token);
+
+                    await Shell.Current.GoToAsync("//home");
                 }
+                else
+                {
+                    await Shell.Current.DisplayAlert("Error", result?.Message ?? "Login Failed", "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlert("Error", $"Connection failed: {ex.Message}", "OK");
+            }
+            finally
+            {
+                IsLoading = false; // Show Button again
             }
         }
 
-        private bool _hasError;
-        public bool HasError
+        [RelayCommand]
+        private async Task GoToRegister()
         {
-            get => _hasError;
-            set { if (_hasError != value) { _hasError = value; Raise(); } }
-        }
-
-        private string _errorMessage = string.Empty;
-        public string ErrorMessage
-        {
-            get => _errorMessage;
-            set { if (_errorMessage != value) { _errorMessage = value; Raise(); } }
-        }
-
-        public string LoginButtonText => IsBusy ? "Signing in..." : "Login";
-        public ICommand LoginCommand { get; }
-
-        public LoginViewModel(IAuthService auth)
-        {
-            _auth = auth;
-
-#if DEBUG
-            // Valid DummyJSON accounts:
-            // emilys / emilyspass  OR  kminchelle / 0lelplR
-            LoginEmail = "emilys";
-            LoginPassword = "emilyspass";
-#endif
-
-            LoginCommand = new Command(async () =>
-            {
-                HasError = false;
-                ErrorMessage = string.Empty;
-
-                var email = (LoginEmail ?? string.Empty).Trim();
-                var pass = (LoginPassword ?? string.Empty).Trim();
-                if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(pass))
-                {
-                    HasError = true;
-                    ErrorMessage = "Enter username and password.";
-                    return;
-                }
-
-                try
-                {
-                    IsBusy = true;
-                    var result = await _auth.LoginAsync(email, pass);
-                    if (!result.Success || string.IsNullOrWhiteSpace(result.accessToken))
-                    {
-                        HasError = true;
-                        ErrorMessage = result.Error ?? "Invalid credentials.";
-                        return;
-                    }
-
-                    //var me = await _auth.GetMeAsync();
-                    //if (me is null)
-                    //{
-                    //    HasError = true;
-                    //    ErrorMessage = "Token set, but /auth/me failed.";
-                    //    return;
-                    //}
-
-                    //Debug.WriteLine($"[AUTH VERIFIED] id={me.id} username={me.email}");
-
-                    // SUCCESS → navigate to HomePage
-                    await AppShell.DisplayToastAsync("Signed in successfully.");
-                    await Shell.Current.GoToAsync("//home");
-                }
-                catch (Exception ex)
-                {
-                    HasError = true;
-                    ErrorMessage = $"Network error: {ex.Message}";
-                }
-                finally
-                {
-                    IsBusy = false;
-                }
-            }, () => !IsBusy);
+            await Shell.Current.GoToAsync("register");
         }
     }
 }

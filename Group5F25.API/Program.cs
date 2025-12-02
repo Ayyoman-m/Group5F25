@@ -1,10 +1,11 @@
 ﻿using Group5F25.API.Data;
 using Group5F25.API.Services;
-using Group5F25.API.Options; //  For JwtOptions
+using Group5F25.API.Options;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+//using MySql.Data.MySqlClient; // Needed for the old code, keep it in case you revert.
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,35 +15,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 
 // -----------------------------------------------------
-//  2. DATABASE: Use SQL normally, InMemory for testing
+//  2. DATABASE: Use In-Memory for local dev (Quick Fix)
 // -----------------------------------------------------
 
-//if (builder.Environment.IsEnvironment("Testing"))
-//{
-//    builder.Services.AddDbContext<DriverAnalyticsContext>(opts =>
-//        opts.UseInMemoryDatabase("DriverAnalytics_TestDB"));
-//}
-//else
-//{
-//    builder.Services.AddDbContext<DriverAnalyticsContext>(opts =>
-//        opts.UseSqlServer(
-//            builder.Configuration.GetConnectionString("DriverAnalyticsDb"),
-//            sql => sql.EnableRetryOnFailure()
-//        ));
-//}
-
-//  2. DATABASE: Use InMemory for local dev (no SQL Server needed)
+// 2a. DriverAnalyticsContext (for Trips/Scores)
+// Use in-memory database for fast, temporary testing of trip data.
 builder.Services.AddDbContext<DriverAnalyticsContext>(opts =>
     opts.UseInMemoryDatabase("DriverAnalytics_Local"));
 
-//  2b. DATABASE: MySQL for Users (Auth)
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
+// 2b. AppDbContext (for Auth/Users) - QUICK FIX: NOW IN-MEMORY
+// This bypasses the failing MySQL connection for user registration/login.
 builder.Services.AddDbContext<AppDbContext>(opts =>
-    opts.UseMySql(
-        connectionString,
-        ServerVersion.AutoDetect(connectionString)
-    ));
+    opts.UseInMemoryDatabase("Auth_Local"));
+
 
 // -----------------------------------------------------
 //  3. DEPENDENCY INJECTION (DI)

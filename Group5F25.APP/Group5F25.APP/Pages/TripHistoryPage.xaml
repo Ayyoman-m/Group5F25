@@ -2,50 +2,75 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:Group5F25.APP.PageModels"
-             xmlns:models="clr-namespace:Group5F25.APP.Models"
+             xmlns:model="clr-namespace:Group5F25.APP.Models"
              x:Class="Group5F25.APP.Pages.TripHistoryPage"
-             x:DataType="vm:TripHistoryViewModel"
-             Title="Trip History">
+             Title="Trip History"
+             BackgroundColor="#F5F5F5">
 
-    <Grid RowDefinitions="Auto,*" Padding="16">
+    <Grid RowDefinitions="Auto, *">
+        <Button Grid.Row="0"
+                Text="Refresh History"
+                Command="{Binding LoadTripsAsyncCommand}"
+                Margin="10"
+                BackgroundColor="#007bff"
+                TextColor="White"/>
 
-        <!-- Header / Refresh -->
-        <HorizontalStackLayout Grid.Row="0" Spacing="10">
-            <Label Text="Trip History"
-                   FontSize="22"
-                   FontAttributes="Bold"
-                   VerticalOptions="Center" />
-            <ActivityIndicator IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               VerticalOptions="Center" />
-            <Button Text="Refresh"
-                    Command="{Binding RefreshCommand}"
-                    HorizontalOptions="EndAndExpand" />
-        </HorizontalStackLayout>
+        <ActivityIndicator Grid.Row="1" 
+                           IsRunning="{Binding IsLoading}" 
+                           IsVisible="{Binding IsLoading}"
+                           HorizontalOptions="Center" 
+                           VerticalOptions="Center"
+                           Color="#007bff"/>
 
-        <!-- Trip list -->
-        <CollectionView Grid.Row="1"
+        <Label Grid.Row="1"
+               Text="No trips recorded yet."
+               IsVisible="{Binding IsEmpty}"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               FontSize="18"
+               TextColor="Gray"/>
+
+        <CollectionView Grid.Row="1" 
                         ItemsSource="{Binding Trips}"
-                        Margin="0,10,0,0">
-            <CollectionView.EmptyView>
-                <Label Text="No trips found."
-                       HorizontalOptions="Center"
-                       VerticalOptions="Center" />
-            </CollectionView.EmptyView>
-
+                        IsVisible="{Binding IsLoading, Converter={StaticResource InvertedBoolConverter}}">
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:TripSummary">
-                    <Frame Padding="12" Margin="0,4" HasShadow="False" BorderColor="#DDDDDD">
-                        <VerticalStackLayout Spacing="4">
-                            <Label Text="{Binding StartTime, StringFormat='Start: {0:g}'}" />
-                            <Label Text="{Binding EndTime, StringFormat='End: {0:g}'}" />
-                            <Label Text="{Binding Duration, StringFormat='Duration: {0:g}'}" />
-                            <Label Text="{Binding Score, StringFormat='Score: {0:F1}'}" />
-                        </VerticalStackLayout>
-                    </Frame>
+                <DataTemplate x:DataType="model:TripSummary">
+                    <Border Margin="10,5" Padding="15" BackgroundColor="White" 
+                            StrokeShape="RoundRectangle 10" StrokeThickness="0">
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="2,2" Radius="5" Opacity="0.1"/>
+                        </Border.Shadow>
+
+                        <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto, Auto">
+
+                            <Label Grid.Row="0" Grid.Column="0" 
+                                   Text="{Binding StartTime, StringFormat='{0:MMM dd, yyyy h:mm tt}'}" 
+                                   FontAttributes="Bold" FontSize="16" TextColor="#333"/>
+
+                            <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                                   BackgroundColor="{Binding SafetyScore, Converter={StaticResource ScoreColorConverter}}"
+                                   StrokeShape="RoundRectangle 20" StrokeThickness="0"
+                                   Padding="10"
+                                   HorizontalOptions="End" VerticalOptions="Start">
+                                <Label Text="{Binding SafetyScore}" 
+                                       TextColor="White" FontAttributes="Bold" FontSize="18"/>
+                            </Border>
+
+                            <HorizontalStackLayout Grid.Row="1" Grid.Column="0" Spacing="5">
+                                <Label Text="Duration:" TextColor="Gray" FontSize="14"/>
+                                <Label Text="{Binding DurationSeconds, StringFormat='{0} sec'}" 
+                                       TextColor="Black" FontSize="14"/>
+                            </HorizontalStackLayout>
+
+                            <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                   Text="{Binding Notes}" 
+                                   FontSize="12" TextColor="#666" 
+                                   IsVisible="{Binding Notes, Converter={StaticResource StringNotNullConverter}}"
+                                   Margin="0,5,0,0"/>
+                        </Grid>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
     </Grid>
 </ContentPage>

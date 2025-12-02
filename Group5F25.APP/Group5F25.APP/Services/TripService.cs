@@ -1,5 +1,5 @@
-﻿using System.Net.Http.Json;
-using Group5F25.APP.Models;
+﻿using Group5F25.APP.Models;
+using System.Net.Http.Json;
 
 namespace Group5F25.APP.Services
 {
@@ -20,14 +20,15 @@ namespace Group5F25.APP.Services
 
         public async Task<List<TripSummary>> GetTripsAsync(int userId, CancellationToken ct = default)
         {
-            var path = ApiConfig.TripUserBasePath + userId;
+            // Call API: api/trip/user/{userId}
+            var response = await _httpClient.GetAsync($"{ApiConfig.TripUserBasePath}{userId}", ct);
 
-            var response = await _httpClient.GetAsync(path, ct);
-            response.EnsureSuccessStatusCode();
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<List<TripSummary>>(cancellationToken: ct) ?? new List<TripSummary>();
+            }
 
-            var trips = await response.Content.ReadFromJsonAsync<List<TripSummary>>(cancellationToken: ct);
-            return trips ?? new List<TripSummary>();
+            return new List<TripSummary>();
         }
-
     }
 }
