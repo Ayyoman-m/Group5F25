@@ -1,17 +1,11 @@
-﻿namespace Group_5_Project_Ayman_Birendra_Cole_Rasik.API.Models
+﻿namespace Group5F25.APP.Models
 {
-    public class Trip
+    public class TripSummary
     {
         public int Id { get; set; }
-
-        public int UserId { get; set; }
-
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
-
         public int DurationSeconds { get; set; }
-
         public int? SafetyScore { get; set; }
-        public string? Notes { get; set; }
     }
 }

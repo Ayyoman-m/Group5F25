@@ -1,4 +1,5 @@
-﻿using Group5F25.API.Models;
+﻿using Group_5_Project_Ayman_Birendra_Cole_Rasik.API.Models;
+using Group5F25.API.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Group5F25.API.Data
@@ -11,6 +12,7 @@ namespace Group5F25.API.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Trip> Trips { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

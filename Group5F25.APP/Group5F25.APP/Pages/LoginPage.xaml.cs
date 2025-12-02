@@ -9,5 +9,11 @@ namespace Group5F25.APP.Pages
             InitializeComponent();
             BindingContext = vm;
         }
+
+        // This is the handler for the "Create Account" button
+        private async void OnRegisterClicked(object sender, EventArgs e)
+        {
+            await Shell.Current.GoToAsync("register");
+        }
     }
 }

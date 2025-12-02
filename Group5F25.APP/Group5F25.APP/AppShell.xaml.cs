@@ -27,10 +27,23 @@ namespace Group5F25.APP
                 Route = "home",
                 Content = homePage
             });
+
+            // NEW: route for RegisterPage (navigation only, NOT a tab)
+            Routing.RegisterRoute("register", typeof(RegisterPage));
+
+            // NEW: route for RegistrationSuccessPage
+            Routing.RegisterRoute("registrationSuccess", typeof(RegistrationSuccessPage));
+
+            Routing.RegisterRoute("tripHistory", typeof(TripHistoryPage));
+
         }
 
         public static async Task DisplaySnackbarAsync(string message)
         {
+            // Skip Snackbar on Windows to avoid Toolkit setup requirements
+            if (OperatingSystem.IsWindows())
+                return;
+
             var cts = new CancellationTokenSource();
             var snackbar = Snackbar.Make(
                 message,
@@ -45,6 +58,7 @@ namespace Group5F25.APP
                 });
             await snackbar.Show(cts.Token);
         }
+
 
         public static async Task DisplayToastAsync(string message)
         {

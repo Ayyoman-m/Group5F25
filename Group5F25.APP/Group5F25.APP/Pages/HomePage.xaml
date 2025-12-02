@@ -1,11 +1,82 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    x:Class="Group5F25.APP.Pages.HomePage"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Home">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Group5F25.APP.PageModels"
+             x:Class="Group5F25.APP.Pages.HomePage"
+             x:DataType="vm:HomePageViewModel"
+             Title="Dashboard"
+             BackgroundColor="#F2F2F2">
 
-    <VerticalStackLayout Padding="24" Spacing="12">
-        <Label Text="Welcome" FontSize="24" />
-    </VerticalStackLayout>
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Grid ColumnDefinitions="*, Auto">
+                <VerticalStackLayout Grid.Column="0">
+                    <Label Text="Welcome back," FontSize="14" TextColor="#6E6E6E"/>
+                    <Label Text="{Binding UserName}" FontSize="24" FontAttributes="Bold" TextColor="#512BD4"/>
+                </VerticalStackLayout>
+                <Border Grid.Column="1" StrokeShape="RoundRectangle 20" HeightRequest="40" WidthRequest="40" BackgroundColor="#E1E1E1" StrokeThickness="0">
+                    <Label Text="BD" HorizontalOptions="Center" VerticalOptions="Center" FontAttributes="Bold" TextColor="#512BD4"/>
+                </Border>
+            </Grid>
+
+            <Border StrokeShape="RoundRectangle 20" StrokeThickness="0" BackgroundColor="#512BD4" Padding="25">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,4" Radius="10" Opacity="0.3"/>
+                </Border.Shadow>
+                <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="*, Auto">
+                    <Label Grid.Row="0" Grid.Column="0" Text="Safety Score" TextColor="White" Opacity="0.8"/>
+
+                    <Label Grid.Row="1" Grid.Column="0" Text="{Binding OverallScore}" TextColor="White" FontSize="60" FontAttributes="Bold"/>
+                    <Label Grid.Row="1" Grid.Column="0" Text="/100" TextColor="White" FontSize="18" VerticalOptions="End" Margin="70,0,0,10" Opacity="0.8"/>
+
+                    <Border Grid.Row="1" Grid.Column="1" BackgroundColor="White" StrokeShape="RoundRectangle 15" VerticalOptions="Center" Padding="10,5" StrokeThickness="0">
+                        <Label Text="{Binding ScoreMessage}" TextColor="#512BD4" FontAttributes="Bold"/>
+                    </Border>
+
+                    <Label Grid.Row="2" Grid.ColumnSpan="2" Text="Top 5% of drivers this week" TextColor="White" Opacity="0.7" FontSize="12" Margin="0,10,0,0"/>
+                </Grid>
+            </Border>
+
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Current Trip" FontSize="18" FontAttributes="Bold" TextColor="#212121"/>
+
+                <Border StrokeShape="RoundRectangle 15" StrokeThickness="0" BackgroundColor="White" Padding="20">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.1"/>
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="15">
+
+                        <Label Text="{Binding TimerText}" 
+                               FontSize="40" 
+                               HorizontalOptions="Center" 
+                               FontAttributes="Bold"
+                               TextColor="white"/>
+
+                        <Button Text="{Binding ActionButtonText}"
+                                Command="{Binding ToggleTripCommand}"
+                                BackgroundColor="{Binding ActionButtonColor}"
+                                TextColor="White"
+                                HeightRequest="60"
+                                CornerRadius="30"
+                                FontAttributes="Bold"
+                                FontSize="18"/>
+
+                        <Label Text="GPS Signal: Strong" HorizontalOptions="Center" FontSize="12" TextColor="#28a745" IsVisible="{Binding IsRecording}"/>
+                    </VerticalStackLayout>
+                </Border>
+            </VerticalStackLayout>
+
+            <Button Grid.Column="0"
+        Text="Trip History"
+        BackgroundColor="White"
+        TextColor="#512BD4"
+        BorderColor="#512BD4"
+        BorderWidth="1"
+        CornerRadius="10"
+        Command="{Binding NavigateToTripHistoryCommand}" />
+
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

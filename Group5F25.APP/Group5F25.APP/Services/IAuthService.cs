@@ -2,12 +2,18 @@
 
 namespace Group5F25.APP.Services
 {
-
     public interface IAuthService
     {
-        Task<LoginResult> LoginAsync(string username, string password, CancellationToken ct = default);
+        // LOGIN (used by LoginViewModel)
+        Task<LoginResult> LoginAsync(string email, string password, CancellationToken ct = default);
+
+        // REGISTER (used by RegisterViewModel)
+        Task<LoginResult> RegisterAsync(string email, string password, string firstName, string lastName, CancellationToken ct = default);
+
+        // Used internally to attach Authorization: Bearer <token>
         void SetAccessToken(string? token);
-        //Task<string?> GetMeRawAsync(CancellationToken ct = default);
-        Task<UserProfile?> GetMeAsync(CancellationToken ct = default);   // add
+
+        // Stubbed (optional) — used before we disabled /auth/me
+        Task<UserProfile?> GetMeAsync(CancellationToken ct = default);
     }
 }

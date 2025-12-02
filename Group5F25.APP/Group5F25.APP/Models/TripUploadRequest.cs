@@ -1,9 +1,7 @@
-﻿namespace Group_5_Project_Ayman_Birendra_Cole_Rasik.API.Models
+﻿namespace Group5F25.APP.Models
 {
-    public class Trip
+    public class TripUploadRequest
     {
-        public int Id { get; set; }
-
         public int UserId { get; set; }
 
         public DateTime StartTime { get; set; }

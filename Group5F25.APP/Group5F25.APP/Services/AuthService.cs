@@ -59,6 +59,28 @@ namespace Group5F25.APP.Services
         //    return await resp.Content.ReadAsStringAsync(ct);
         //}
 
+        public async Task<LoginResult> RegisterAsync(string email, string password, string firstName, string lastName, CancellationToken ct = default)
+        {
+            var req = new RegisterRequest
+            {
+                email = email,
+                password = password,
+                firstName = firstName,
+                lastName = lastName
+            };
+
+            var resp = await _http.PostAsJsonAsync(ApiConfig.RegisterPath, req, ct);
+            var body = await resp.Content.ReadAsStringAsync(ct);
+
+            if (!resp.IsSuccessStatusCode)
+                return new LoginResult { Success = false, Message = body };
+
+            var result = JsonSerializer.Deserialize<LoginResult>(body, JsonOpts);
+            result.Success = true;
+            return result!;
+        }
+
+
         public async Task<UserProfile?> GetMeAsync(CancellationToken ct = default)
         {
             var resp = await _http.GetAsync(ApiConfig.MePath, ct);

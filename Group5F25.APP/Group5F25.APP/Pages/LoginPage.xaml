@@ -34,6 +34,11 @@
             <Button 
                 Text="{Binding LoginButtonText}" 
                 Command="{Binding LoginCommand}" />
+            <Button 
+                Text="Create Account"
+                Clicked="OnRegisterClicked" />
+
+
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

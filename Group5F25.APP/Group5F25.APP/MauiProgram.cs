@@ -58,9 +58,28 @@ namespace Group5F25.APP
             builder.Services.AddTransient<LoginViewModel>();
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddSingleton<AppShell>();
+
+            // Register the ViewModel so HomePage can inject it
+            builder.Services.AddTransient<HomePageViewModel>();
             builder.Services.AddTransient<HomePage>();
 
+            builder.Services.AddTransient<RegisterViewModel>();
+
+            builder.Services.AddTransient<RegisterPage>();
+
+       
+            builder.Services.AddTransient<TripHistoryViewModel>();
+            builder.Services.AddTransient<TripHistoryPage>();
+
+
             builder.Services.AddHttpClient<IAuthService, AuthService>(client =>
+            {
+                client.BaseAddress = new Uri(ApiConfig.BaseUrl);
+                client.Timeout = TimeSpan.FromSeconds(15);
+            });
+
+
+            builder.Services.AddHttpClient<ITripService, TripService>(client =>
             {
                 client.BaseAddress = new Uri(ApiConfig.BaseUrl);
                 client.Timeout = TimeSpan.FromSeconds(15);
